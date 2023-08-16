@@ -22,7 +22,6 @@ def login():
     conn = get_db_connection()
     cur = conn.cursor()
     res = cur.execute('SELECT email, password FROM auth_user WHERE email = %s', (auth.username,))
-    
     if res is None:
         user_row = cur.fetchone()
         email = user_row[0]
@@ -50,7 +49,6 @@ def CreateJWT(username, secret, authz):
 @server.route('/validate', methods=['POST'])
 def validate():
     encoded_jwt = request.headers['Authorization']
-    
     if not encoded_jwt:
         return 'Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'}
 
@@ -59,7 +57,6 @@ def validate():
         decoded_jwt = jwt.decode(encoded_jwt, os.environ['JWT_SECRET'], algorithms=["HS256"])
     except:
         return 'Unauthorized', 401, {'WWW-Authenticate': 'Basic realm="Login required!"'}
-    
     return decoded_jwt, 200
 
 if __name__ == '__main__':

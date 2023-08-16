@@ -2,9 +2,11 @@ import pika, json
 
 
 def upload(f, fs, channel, access):
+    print("running utils upload function")
     try:
         fid = fs.put(f)
     except Exception as err:
+        print("Error in upload function before posting to mongo")
         print(err)
         return "internal server error", 500
 
@@ -13,6 +15,8 @@ def upload(f, fs, channel, access):
         "mp3_fid": None,
         "username": access["username"],
     }
+
+    print(f"fid: {fid}")
 
     try:
         channel.basic_publish(
@@ -24,6 +28,7 @@ def upload(f, fs, channel, access):
             ),
         )
     except Exception as err:
+        print("Error in upload function after posting to mongo")
         print(err)
         fs.delete(fid)
         return "internal server error", 500

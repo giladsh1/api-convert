@@ -21,6 +21,7 @@ channel = connection.channel()
 
 @server.route("/login", methods=["POST"])
 def login():
+    print("got a request for /login")
     token, err = access.login(request)
 
     if not err:
@@ -31,23 +32,21 @@ def login():
 
 @server.route("/upload", methods=["POST"])
 def upload():
+    print("Got upload request")
+    print(f"request: {request}")
     access, err = validate.token(request)
-
     if err:
         return err
-
     access = json.loads(access)
-
+    print("After token validation for upload")
     if access["admin"]:
         if len(request.files) > 1 or len(request.files) < 1:
             return "exactly 1 file required", 400
-
         for _, f in request.files.items():
+            print(f"uploading file: {f}")
             err = util.upload(f, fs_videos, channel, access)
-
             if err:
                 return err
-
         return "success!", 200
     else:
         return "not authorized", 401

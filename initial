@@ -1,0 +1,24 @@
+connect to mongo db container and run the following:
+kubectl exec -it mongodb-0 -- /bin/bash
+mongo
+use admin
+db.createUser({
+  user: "regiapriandi",
+  pwd: "sinheul24",
+  roles: [{ role: "root", db: "admin" }]
+})
+
+
+
+connect to postgres and run the following:
+pgcli -U regiapriandi -d authdb -h 127.0.0.1 -p 30003
+
+CREATE TABLE auth_user
+ (
+     id SERIAL NOT NULL PRIMARY KEY,
+     email VARCHAR (255) NOT NULL,
+     password VARCHAR (255) NOT NULL
+ );
+
+ and then
+ INSERT INTO auth_user  (email, password) VALUES ('g@g.com', '111');

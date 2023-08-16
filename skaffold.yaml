@@ -1,0 +1,31 @@
+apiVersion: skaffold/v2beta21
+kind: Config
+build:
+  local:
+    concurrency: 0
+    tryImportMissing: false
+    useDockerCLI: false
+  artifacts:
+    - image: converter
+      context: python/src/converter
+      # docker:
+      #   dockerfile: Dockerfile
+    - image: auth
+      context: python/src/auth
+      # docker:
+      #   dockerfile: Dockerfile
+    - image: gateway
+      context: python/src/gateway
+      # docker:
+      #   dockerfile: Dockerfile
+    - image: notification
+      context: python/src/notification
+      # docker:
+      #   dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - python/src/converter/manifest/*.yaml
+      - python/src/auth/manifest/*.yaml
+      - python/src/gateway/manifest/*.yaml
+      - python/src/notification/manifest/*.yaml
